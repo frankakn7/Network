@@ -4,15 +4,17 @@ var context = canvas.getContext("2d");
 var nodes = []
 var nodeNum = 0;
 
-function node(x,y){
+function node(x,y,color){
 	this.x = x;
 	this.y = y;
+	this.color = color;
 	
 	this.draw = function(){
 		for(var i = 0; i < nodes.length; i++){
 			if(nodes[i].x === this.x && nodes[i].y === this.y){
 				continue;
 			}else{
+				context.strokeStyle = this.color;
 				context.beginPath();
 				context.moveTo(this.x, this.y);
 				context.lineTo(nodes[i].x,nodes[i].y);
@@ -24,8 +26,16 @@ function node(x,y){
 }
 
 function generateNode(){
-	nodes[nodeNum] = new node(Math.floor(Math.random()*canvas.width),Math.floor(Math.random()*canvas.height));
+	nodes[nodeNum] = new node(Math.floor(Math.random()*canvas.width),Math.floor(Math.random()*canvas.height),randomColor());
 	nodeNum ++;
+}
+
+function expand(){
+	generateNode();
+	context.clearRect(0,0,canvas.width,canvas.height);
+	for(var i = 0; i < nodes.length; i++){
+		nodes[i].draw();
+	}
 }
 
 function update(){
