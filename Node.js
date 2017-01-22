@@ -8,20 +8,26 @@ function node(x,y,color){
 	this.x = x;
 	this.y = y;
 	this.color = color;
+	this.connected = false;
 	
 	this.draw = function(){
 		for(var i = 0; i < nodes.length; i++){
 			if(nodes[i].x === this.x && nodes[i].y === this.y){
 				continue;
 			}else{
-				context.strokeStyle = this.color;
-				context.beginPath();
-				context.moveTo(this.x, this.y);
-				context.lineTo(nodes[i].x,nodes[i].y);
-				context.stroke();
-				context.closePath();
+				if(nodes[i].connected === false){
+					context.strokeStyle = this.color;
+					context.beginPath();
+					context.moveTo(this.x, this.y);
+					context.lineTo(nodes[i].x,nodes[i].y);
+					context.stroke();
+					context.closePath();
+				}else{
+					continue;
+				}
 			}
 		}
+		this.connected = true;
 	}
 }
 
@@ -32,17 +38,18 @@ function generateNode(){
 
 function expand(){
 	generateNode();
-	context.clearRect(0,0,canvas.width,canvas.height);
+	//context.clearRect(0,0,canvas.width,canvas.height);
 	for(var i = 0; i < nodes.length; i++){
-		nodes[i].draw();
+		nodes[i].connected = false;
 	}
+	nodes[nodes.length - 1].draw();
 }
 
 function update(){
 	context.clearRect(0,0,canvas.width,canvas.height);
 	nodes = [];
 	nodeNum = 0;
-	for(var i = 0; i < 10; i++){
+	for(var i = 0; i < 8; i++){
 		generateNode();
 	}
 	for(var i = 0; i < nodes.length; i++){
